@@ -14,11 +14,13 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
             display: flex;
             justify-content: space-between;
             padding: 15px;
         }
+
         .box {
             width: 48%;
             background-color: #ffffff;
@@ -27,23 +29,29 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 15px;
         }
+
         .calculator-settings {
             margin-bottom: 20px;
         }
+
         .calculator-content {
             margin-bottom: 15px;
         }
+
         .input-wrapper {
             margin-bottom: 15px;
         }
+
         .input__title {
             font-weight: bold;
             margin-bottom: 5px;
         }
+
         .input-field {
             display: flex;
             align-items: center;
         }
+
         .input-field__input {
             width: 100%;
             padding: 10px;
@@ -51,25 +59,31 @@
             border-radius: 4px;
             font-size: 16px;
         }
+
         .input-field__hint {
             margin-left: 10px;
             font-size: 14px;
             color: #666;
         }
+
         .input-field__error {
             border-color: red;
         }
+
         .input-field__error::placeholder {
             color: red;
         }
+
         .error-message {
             color: red;
             font-size: 14px;
             display: none;
         }
+
         .error-message.active {
             display: block;
         }
+
         .button--primary {
             background-color: #007bff;
             color: white;
@@ -78,23 +92,25 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .button--primary:hover {
             background-color: #0056b3;
         }
-        #zinseszinsChart {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+
         .checkbox-label {
             display: flex;
             align-items: center;
         }
+
         .checkbox-label .input-field__input {
             width: auto;
             margin-right: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
         }
     </style>
 </head>
@@ -109,7 +125,8 @@
                             <label class="input col">
                                 <p class="input__title">Alter: <span id="yearsValue">50</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="50" oninput="updateYearsValue(this.value)" />
+                                    <input type="range" class="input-field__input" id="years" min="18" max="67"
+                                        value="50" oninput="updateYearsValue(this.value)" />
                                 </div>
                             </label>
                             <label class="input col">
@@ -150,7 +167,9 @@
             </div>
         </div>
         <div class="box">
-            <canvas id="zinseszinsChart" width="800" height="400"></canvas>
+            <div class="chart-container">
+                <canvas id="zinseszinsChart"></canvas>
+            </div>
         </div>
     </div>
 
@@ -163,7 +182,7 @@
             const value = element.value;
             const isValid = /^\d+$/.test(value);
             const errorMessage = element.id === 'sum' ? document.getElementById('sumError') : document.getElementById('incomeError');
-            
+
             if (!isValid) {
                 element.classList.add('input-field__error');
                 errorMessage.classList.add('active');
@@ -210,7 +229,7 @@
         function calculate() {
             const sum = document.getElementById('sum');
             const income = document.getElementById('income');
-            
+
             if (!/^\d+$/.test(sum.value)) {
                 sum.classList.add('input-field__error');
                 document.getElementById('sumError').classList.add('active');
@@ -221,7 +240,7 @@
                 document.getElementById('incomeError').classList.add('active');
                 return;
             }
-            
+
             const years = document.getElementById('years');
             const pkv = document.getElementById('pkv');
 
