@@ -7,19 +7,27 @@
     <title>Zinseszinsrechnung</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Custom CSS to integrate with existing website */
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
-        .calculator-settings {
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+        }
+        .box {
+            width: 48%;
             background-color: #ffffff;
             border: 1px solid #ddd;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
         }
-        .calculator-setting {
+        .calculator-settings {
             margin-bottom: 20px;
         }
         .calculator-content {
@@ -48,6 +56,20 @@
             font-size: 14px;
             color: #666;
         }
+        .input-field__error {
+            border-color: red;
+        }
+        .input-field__error::placeholder {
+            color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+        .error-message.active {
+            display: block;
+        }
         .button--primary {
             background-color: #007bff;
             color: white;
@@ -66,22 +88,28 @@
             padding: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-label .input-field__input {
+            width: auto;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div style="display: flex;">
-        <div style="width: 50%;">
-            <div class="calculator-settings" style="padding: 15px;">
+    <div class="container">
+        <div class="box">
+            <div class="calculator-settings">
                 <div class="calculator-setting" id="calculator_form">
                     <div class="calculator-content col">
                         <div class="input-wrapper row loan_type related-to-loan_type-0">
-                            <label class="input col  ">
-                                <p class="input__title">Alter</p>
+                            <label class="input col">
+                                <p class="input__title">Alter: <span id="yearsValue">50</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="text" class="input-field__input" placeholder="" id="years"
-                                        value="50" />
-                                    <span class="input-field__hint">Jahre</span>
+                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="50" oninput="updateYearsValue(this.value)" />
                                 </div>
                             </label>
                             <label class="input col">
@@ -90,17 +118,16 @@
                                 </p>
                                 <div class="input-field row">
                                     <input type="text" class="input-field__input" placeholder="" id="sum"
-                                        value="1000" />
+                                        value="1000" oninput="validateInput(this)" />
                                     <span class="input-field__hint">€</span>
                                 </div>
+                                <p class="error-message" id="sumError">Bitte nur Ganzzahlen eingeben</p>
                             </label>
-                            <label class="input col">
+                            <label class="input col checkbox-label">
+                                <input type="checkbox" class="input-field__input" id="pkv" />
                                 <p class="input__title">
                                     Private Krankenversicherung
                                 </p>
-                                <div class="input-field row">
-                                    <input type="checkbox" class="input-field__input" id="pkv" />
-                                </div>
                             </label>
                             <label class="input col">
                                 <p class="input__title">
@@ -108,9 +135,10 @@
                                 </p>
                                 <div class="input-field row">
                                     <input type="text" class="input-field__input" placeholder="" id="income"
-                                        value="26000" />
+                                        value="26000" oninput="validateInput(this)" />
                                     <span class="input-field__hint">€</span>
                                 </div>
+                                <p class="error-message" id="incomeError">Bitte nur Ganzzahlen eingeben</p>
                             </label>
                         </div>
                     </div>
@@ -121,12 +149,30 @@
                 </div>
             </div>
         </div>
-        <div style="width: 50%; padding: 15px;">
+        <div class="box">
             <canvas id="zinseszinsChart" width="800" height="400"></canvas>
         </div>
     </div>
 
     <script>
+        function updateYearsValue(value) {
+            document.getElementById('yearsValue').innerText = value;
+        }
+
+        function validateInput(element) {
+            const value = element.value;
+            const isValid = /^\d+$/.test(value);
+            const errorMessage = element.id === 'sum' ? document.getElementById('sumError') : document.getElementById('incomeError');
+            
+            if (!isValid) {
+                element.classList.add('input-field__error');
+                errorMessage.classList.add('active');
+            } else {
+                element.classList.remove('input-field__error');
+                errorMessage.classList.remove('active');
+            }
+        }
+
         function zinseszins(years, sum, pkv, income) {
             const data = [];
             let value = 0;
@@ -148,10 +194,11 @@
 
             return data;
         }
+
         function verzinsteSparsumme(years, sum) {
             const data = [];
             console.log(sum);
-            let value = sum /2;
+            let value = sum / 2;
             let j = 1;
             for (let i = years; i < 68; i++) {
                 data.push(value * j++);
@@ -161,10 +208,22 @@
         }
 
         function calculate() {
-            const years = document.getElementById('years');
             const sum = document.getElementById('sum');
-            const pkv = document.getElementById('pkv');
             const income = document.getElementById('income');
+            
+            if (!/^\d+$/.test(sum.value)) {
+                sum.classList.add('input-field__error');
+                document.getElementById('sumError').classList.add('active');
+                return;
+            }
+            if (!/^\d+$/.test(income.value)) {
+                income.classList.add('input-field__error');
+                document.getElementById('incomeError').classList.add('active');
+                return;
+            }
+            
+            const years = document.getElementById('years');
+            const pkv = document.getElementById('pkv');
 
             const labels = Array.from({ length: 68 - parseInt(years.value) + 1 }, (_, i) => parseInt(years.value) + i);
 
