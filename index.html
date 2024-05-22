@@ -88,9 +88,11 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 15px 40px; /* Vergrößerte Polsterung für den Button */
             border-radius: 4px;
             cursor: pointer;
+            display: block; /* Änderung auf block, damit es zentriert wird */
+            margin: 0 auto; /* Zentriert den Button */
         }
 
         .button--primary:hover {
@@ -117,7 +119,7 @@
 
 <body>
     <div class="container">
-        <div class="box">
+        <div class="box" style="margin-right: 10px;"> <!-- Margin hinzugefügt, um Platz zwischen den Boxen zu schaffen -->
             <div class="calculator-settings">
                 <div class="calculator-setting" id="calculator_form">
                     <div class="calculator-content col">
@@ -125,56 +127,47 @@
                             <label class="input col">
                                 <p class="input__title">Alter: <span id="yearsValue">50</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="years" min="18" max="67"
-                                        value="50" oninput="updateYearsValue(this.value)" />
+                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="50" oninput="updateYearsValue(this.value)" />
                                 </div>
                             </label>
                             <label class="input col">
-                                <p class="input__title">
-                                    Sparsumme
-                                </p>
+                                <p class="input__title">Sparsumme: <span id="sumValue">1000</span> €</p>
                                 <div class="input-field row">
-                                    <input type="text" class="input-field__input" placeholder="" id="sum"
-                                        value="1000" oninput="validateInput(this)" />
-                                    <span class="input-field__hint">€</span>
+                                    <input type="range" class="input-field__input" id="sum" min="0" max="100000" value="1000" oninput="updateSumValue(this.value)" />
                                 </div>
-                                <p class="error-message" id="sumError">Bitte nur Ganzzahlen eingeben</p>
+                            </label>
+                            <label class="input col">
+                                <p class="input__title">Jahreseinkommen: <span id="incomeValue">26000</span> €</p>
+                                <div class="input-field row">
+                                    <input type="range" class="input-field__input" id="income" min="0" max="500000" value="26000" oninput="updateIncomeValue(this.value)" />
+                                </div>
                             </label>
                             <label class="input col checkbox-label">
                                 <input type="checkbox" class="input-field__input" id="pkv" />
-                                <p class="input__title">
-                                    Private Krankenversicherung
-                                </p>
-                            </label>
-                            <label class="input col">
-                                <p class="input__title">
-                                    Jahreseinkommen
-                                </p>
-                                <div class="input-field row">
-                                    <input type="text" class="input-field__input" placeholder="" id="income"
-                                        value="26000" oninput="validateInput(this)" />
-                                    <span class="input-field__hint">€</span>
-                                </div>
-                                <p class="error-message" id="incomeError">Bitte nur Ganzzahlen eingeben</p>
+                                <p class="input__title">Private Krankenversicherung</p>
+                                <input type="checkbox" class="input-field__input" id="gkv" checked style="margin-left: 20px;" />
+                                <p class="input__title">Gesetzliche Krankenversicherung</p>
                             </label>
                         </div>
                     </div>
-                    <div
-                        class="calculator-content calculator-content--gray calculator-content--footer calculator-content--small row  ">
-                        <button class="button button--primary ml-auto" onclick="calculate(this)">Berechnen</button>
+                    <div class="calculator-content calculator-content--gray calculator-content--footer calculator-content--small row">
+                        <button class="button button--primary ml-auto" onclick="calculate()">Berechnen</button>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="box">
             <div class="chart-container">
                 <canvas id="zinseszinsChart"></canvas>
+            </div>
+            <div class="results" id="results">
             </div>
         </div>
     </div>
 
     <script>
-        function updateYearsValue(value) {
+      function updateYearsValue(value) {
             document.getElementById('yearsValue').innerText = value;
         }
 
@@ -193,8 +186,13 @@
         }
 
         function zinseszins(years, sum, pkv, income) {
-            const data = [];
-            let value = 0;
+            const obj = {
+                data : [],
+                savings : 0,
+                total : 0
+            }
+            
+            let value = sum;
             for (let i = years; i < 68; i++) {
                 let t = 0;
                 if (sum === 2000 && pkv === 0 && income > 120000) {
@@ -205,23 +203,24 @@
                         Math.max(
                             2500,
                             2500 + (sum / 2000 * 5000) + (pkv * 1000) + (income / 30000 * 1500) - (years - 30) * 50
-                        ));
+                        )
+                    );
                 }
-                value = value + t;
-                data.push(value);
+                obj.savings = t;
+                obj.total += t;
+                value = (value + t) * 1.05; // Add yearly savings and apply 5% interest
+                obj.data.push(value);
             }
-
-            return data;
+            return obj;
         }
 
         function verzinsteSparsumme(years, sum) {
             const data = [];
-            console.log(sum);
-            let value = sum / 2;
-            let j = 1;
+            let value = 0; // Initial value is 0, since we're starting to accumulate savings
             for (let i = years; i < 68; i++) {
-                data.push(value * j++);
-                value += value * 0.01;
+                value += sum; // Add the annual sum
+                value += value * 0.05; // Apply 5% interest
+                data.push(value);
             }
             return data;
         }
@@ -246,17 +245,19 @@
 
             const labels = Array.from({ length: 68 - parseInt(years.value) + 1 }, (_, i) => parseInt(years.value) + i);
 
+            const obj = zinseszins(parseInt(years.value), parseInt(sum.value), pkv.checked, parseInt(income.value));
+
             const data = {
                 labels: labels,
                 datasets: [{
                     label: 'Ersparnis',
-                    data: zinseszins(parseInt(years.value), parseInt(sum.value), pkv.checked, parseInt(income.value)),
+                    data: obj.data,
                     fill: false,
                     borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
                 },
                 {
-                    label: 'Verzinste Sparsumme (1%)',
+                    label: 'Verzinste Sparsumme (5%)',
                     data: verzinsteSparsumme(parseInt(years.value), parseInt(sum.value)),
                     fill: false,
                     borderColor: 'rgb(255, 99, 132)',
@@ -293,6 +294,17 @@
                 document.getElementById('zinseszinsChart'),
                 config
             );
+
+            // Berechnungen für die Ergebnisse
+            const yearlySavings = parseInt(obj.savings);
+            const totalSavings = parseInt(obj.total);
+
+            // Anzeige der Ergebnisse
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <p>Jährliche Ersparnis: ${yearlySavings.toFixed(2)} €</p>
+                <p>Gesamte Ersparnis bis 67: ${totalSavings.toFixed(2)} €</p>
+            `;
         }
     </script>
 </body>
