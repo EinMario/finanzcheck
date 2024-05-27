@@ -30,7 +30,13 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 15px;
-            margin-bottom: 15px; /* Abstand für kleine Bildschirme */
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .box#chartBox {
+            flex: 1;
         }
 
         .calculator-settings {
@@ -91,11 +97,11 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 15px 40px; /* Vergrößerte Polsterung für den Button */
+            padding: 15px 40px;
             border-radius: 4px;
             cursor: pointer;
-            display: block; /* Änderung auf block, damit es zentriert wird */
-            margin: 0 auto; /* Zentriert den Button */
+            display: block;
+            margin: 0 auto;
         }
 
         .button--primary:hover {
@@ -125,7 +131,7 @@
 
             .box {
                 width: 100%;
-                margin-right: 0; /* Entfernen des rechten Abstands für kleine Bildschirme */
+                margin-right: 0;
             }
         }
     </style>
@@ -139,33 +145,32 @@
                     <div class="calculator-content col">
                         <div class="input-wrapper row loan_type related-to-loan_type-0">
                             <label class="input col">
-                                <p class="input__title">Alter: <span id="yearsValue">50</span> Jahre</p>
+                                <p class="input__title">Alter: <span id="yearsValue">21</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="50" oninput="updateYearsValue(this.value); calculate();" />
+                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="21" oninput="updateYearsValue(this.value); calculate();" />
                                 </div>
                             </label>
                             <label class="input col">
-                                <p class="input__title">Sparsumme: <span id="sumValue">1000</span> €</p>
+                                <p class="input__title">Monatliche Sparsumme: <span id="sumValue">500</span> €</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="sum" min="0" max="36000" value="1000" oninput="updateSumValue(this.value); calculate();" />
+                                    <input type="range" class="input-field__input" id="sum" min="0" max="3000" value="500" oninput="updateSumValue(this.value); calculate();" />
                                 </div>
                             </label>
                             <label class="input col">
-                                <p class="input__title">Jahreseinkommen: <span id="incomeValue">26000</span> €</p>
+                                <p class="input__title">Jahreseinkommen:</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="income" min="0" max="150000" value="26000" oninput="updateIncomeValue(this.value); calculate();" />
+                                    <input type="text" class="input-field__input" id="income" value="60000" oninput="updateIncomeValue(this.value); validateIncomeInput(this); calculate();" />
+                                    <span class="input-field__hint">€</span>
                                 </div>
+                                <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
                             </label>
                             <label class="input col checkbox-label">
-                                <input type="checkbox" class="input-field__input" id="pkv" onclick="calculate();" />
+                                <input type="checkbox" class="input-field__input" id="pkv" onclick="toggleInsurance('pkv'); calculate();" />
                                 <p class="input__title">Private Krankenversicherung</p>
-                                <input type="checkbox" class="input-field__input" id="gkv" checked style="margin-left: 20px;" onclick="calculate();" />
+                                <input type="checkbox" class="input-field__input" id="gkv" checked onclick="toggleInsurance('gkv'); calculate();" style="margin-left: 20px;" />
                                 <p class="input__title">Gesetzliche Krankenversicherung</p>
                             </label>
                         </div>
-                    </div>
-                    <div class="calculator-content calculator-content--gray calculator-content--footer calculator-content--small row">
-                        <button class="button button--primary ml-auto" onclick="calculate()">Berechnen</button>
                     </div>
                 </div>
             </div>
@@ -195,10 +200,14 @@
             document.getElementById('incomeValue').innerText = value;
         }
 
-        function validateInput(element) {
+        document.getElementById('income').addEventListener('input', function(event) {
+            calculate();
+        });
+
+        function validateIncomeInput(element) {
             const value = element.value;
             const isValid = /^\d+$/.test(value);
-            const errorMessage = element.id === 'sum' ? document.getElementById('sumError') : document.getElementById('incomeError');
+            const errorMessage = document.getElementById('incomeError');
 
             if (!isValid) {
                 element.classList.add('input-field__error');
@@ -206,6 +215,14 @@
             } else {
                 element.classList.remove('input-field__error');
                 errorMessage.classList.remove('active');
+            }
+        }
+
+        function toggleInsurance(selected) {
+            if (selected === 'pkv') {
+                document.getElementById('gkv').checked = false;
+            } else {
+                document.getElementById('pkv').checked = false;
             }
         }
 
@@ -232,7 +249,7 @@
                 }
                 obj.savings = t;
                 obj.total += t;
-                value = (value + t) * 1.05; // Add yearly savings and apply 5% interest
+                value = (value + t) * 1.05; 
                 obj.data.push(value);
             }
             return obj;
@@ -240,10 +257,11 @@
 
         function verzinsteSparsumme(years, sum) {
             const data = [];
-            let value = 0; // Initial value is 0, since we're starting to accumulate savings
+            let x = sum *12;
+            let value = 0; 
             for (let i = years; i < 68; i++) {
-                value += sum; // Add the annual sum
-                value += value * 0.05; // Apply 5% interest
+                value += x; 
+                value += value * 0.03; 
                 data.push(value);
             }
             return data;
@@ -277,10 +295,10 @@
                     label: 'Ersparnis',
                     data: obj.data,
                     fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
                     borderWidth: 2,
-                    pointBackgroundColor: 'rgb(75, 192, 192)',
+                    pointBackgroundColor: '#007bff',
                     pointBorderColor: '#fff',
                     pointRadius: 5,
                     tension: 0.4
@@ -289,10 +307,10 @@
                     label: 'Verzinste Sparsumme (5%)',
                     data: verzinsteSparsumme(parseInt(years.value), parseInt(sum.value)),
                     fill: false,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: '#ff5733',
+                    backgroundColor: 'rgba(255, 87, 51, 0.2)',
                     borderWidth: 2,
-                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: '#ff5733',
                     pointBorderColor: '#fff',
                     pointRadius: 5,
                     tension: 0.4
@@ -344,7 +362,7 @@
                         tooltip: {
                             enabled: true,
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return context.dataset.label + ': ' + context.raw.toFixed(2) + ' €';
                                 }
                             }
@@ -401,7 +419,7 @@
         window.addEventListener('resize', handleResize);
         window.addEventListener('load', () => {
             handleResize();
-            calculate(); // Initial calculation to display the chart
+            calculate();
         });
     </script>
 </body>
