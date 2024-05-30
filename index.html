@@ -308,6 +308,10 @@
             }
             return data;
         }
+        function formatNumber(zahl) {
+            // Die Zahl in das Währungsformat formatieren
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(zahl);
+        }
 
         function calculate() {
             const years = parseInt(document.getElementById('years').value);
@@ -403,11 +407,11 @@
                         },
                         tooltip: {
                             enabled: true,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                            borderColor: 'rgba(0, 0, 0, 0.5)', 
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            borderColor: 'rgba(0, 0, 0, 0.5)',
                             borderWidth: 1,
                             titleColor: 'rgba(0, 0, 0, 0.8)',
-                            bodyColor: 'rgba(0, 0, 0, 0.8)', 
+                            bodyColor: 'rgba(0, 0, 0, 0.8)',
                             titleAlign: 'center',
                             bodyAlign: 'start',
                             mode: 'nearest',
@@ -415,10 +419,10 @@
                             position: 'nearest',
                             callbacks: {
                                 title: function (context) {
-                                    return 'Mit ' + context[0].label + " Jahren"; 
+                                    return 'Mit ' + context[0].label + " Jahren";
                                 },
                                 label: function (context) {
-                                    return 'Ersparnis: ' + context.raw.toFixed(2) + ' €';
+                                    return 'Ersparnis: ' + formatNumber(context.raw);
                                 }
                             }
                         }
