@@ -177,12 +177,29 @@
             }
 
             .container {
+                display: flex;
+                /* Aktiviere Flexbox */
                 flex-direction: column;
+                /* Elemente in einer Spalte anordnen */
+                align-items: center;
+                /* Horizontal zentrieren */
+            }
+
+            .input-wrapper {
+                width: 100%;
+                /* Setze die Breite auf 100% */
             }
 
             .box {
                 width: 90%;
                 margin-bottom: 20px;
+            }
+
+            .input.col {
+                width: 90%;
+                /* Setze die Breite auf 90% */
+                margin: 10px auto;
+                /* Zentriere das Element horizontal und füge Abstand oben und unten hinzu */
             }
 
             .results {
@@ -193,8 +210,10 @@
                 width: 90%;
                 margin-bottom: 10px;
                 margin-right: 5%;
-                justify-content: center; /* Horizontal zentrieren */
-                align-items: center; /* Vertikal zentrieren */
+                justify-content: center;
+                /* Horizontal zentrieren */
+                align-items: center;
+                /* Vertikal zentrieren */
 
             }
 
@@ -205,6 +224,7 @@
 
             .input__title {
                 margin-left: 0;
+                display: inline;
                 /* Zurücksetzen des linken Rands für die Titel */
             }
 
@@ -245,10 +265,11 @@
 
                             <label class="input col checkbox-label">
                                 <input type="checkbox" class="input-field__input" id="pkv"
-                                    onclick="toggleInsurance('pkv'); calculate();" />
+                                    onclick="toggleInsurance('pkv'); calculate();" style="margin-top: 2%;" />
                                 <p class="input__title">Private Krankenversicherung</p>
                                 <input type="checkbox" class="input-field__input" id="gkv" checked
-                                    onclick="toggleInsurance('gkv'); calculate();" style="margin-left: 20px;" />
+                                    onclick="toggleInsurance('gkv'); calculate();"
+                                    style="margin-top: 4%; margin-left: 20px;" />
                                 <p class="input__title">Gesetzliche Krankenversicherung</p>
                             </label>
                         </div>
