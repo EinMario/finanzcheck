@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
@@ -7,10 +7,9 @@
     <title>Zinseszinsrechnung</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom CSS to integrate with existing website */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #f2f2f2;
             margin: 0;
             padding: 0;
         }
@@ -20,17 +19,21 @@
             flex-direction: row;
             justify-content: space-between;
             flex-wrap: wrap;
-            padding: 15px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .box {
             width: 48%;
             background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            margin-bottom: 15px;
+            border: none;
+            border-radius: 20px;
+            box-shadow: none;
+            padding: 20px;
+            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
         }
@@ -48,7 +51,9 @@
         }
 
         .input-wrapper {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .input__title {
@@ -59,19 +64,25 @@
         .input-field {
             display: flex;
             align-items: center;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 10px;
         }
 
         .input-field__input {
-            width: 100%;
+            flex: 1;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 16px;
+            margin-left: 10px;
         }
 
-        .input-field__hint {
-            margin-left: 10px;
-            font-size: 14px;
+        .input-field__icon {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 10px 0 0 10px;
+            font-size: 16px;
             color: #666;
         }
 
@@ -94,23 +105,24 @@
         }
 
         .button--primary {
-            background-color: #007bff;
+            background-color: #6777f1;
             color: white;
             border: none;
             padding: 15px 40px;
-            border-radius: 4px;
+            border-radius: 20px;
             cursor: pointer;
             display: block;
             margin: 0 auto;
         }
 
         .button--primary:hover {
-            background-color: #0056b3;
+            background-color: #6777f1;
         }
 
         .checkbox-label {
             display: flex;
             align-items: center;
+            margin-bottom: 20px;
         }
 
         .checkbox-label .input-field__input {
@@ -122,6 +134,27 @@
             position: relative;
             width: 100%;
             height: 400px;
+        }
+
+        .results {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            background-color: #f2f2f2;
+            border-radius: 20px;
+            padding: 20px;
+            width: 48%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .result-box.highlight {
+            background-color: #6777f1;
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -145,29 +178,35 @@
                     <div class="calculator-content col">
                         <div class="input-wrapper row loan_type related-to-loan_type-0">
                             <label class="input col">
+                                <p class="input__title">Jahreseinkommen:</p>
+                                <div class="input-field row">
+                                    <input type="text" class="input-field__input" id="income" value="60000"
+                                        oninput="validateIncomeInput(this); calculate();" />
+                                    <span class="input-field__hint">&nbsp;€</span>
+                                </div>
+                                <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
+                            </label>
+                            <label class="input col">
                                 <p class="input__title">Alter: <span id="yearsValue">21</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="years" min="18" max="67" value="21" oninput="updateYearsValue(this.value); calculate();" />
+                                    <input type="range" class="input-field__input" id="years" min="18" max="67"
+                                        value="21" oninput="updateYearsValue(this.value); calculate();" />
                                 </div>
                             </label>
                             <label class="input col">
                                 <p class="input__title">Monatliche Sparsumme: <span id="sumValue">500</span> €</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="sum" min="0" max="3000" value="500" oninput="updateSumValue(this.value); calculate();" />
+                                    <input type="range" class="input-field__input" id="sum" min="0" max="3000"
+                                        value="500" oninput="updateSumValue(this.value); calculate();" />
                                 </div>
                             </label>
-                            <label class="input col">
-                                <p class="input__title">Jahreseinkommen:</p>
-                                <div class="input-field row">
-                                    <input type="text" class="input-field__input" id="income" value="60000" oninput="updateIncomeValue(this.value); validateIncomeInput(this); calculate();" />
-                                    <span class="input-field__hint">€</span>
-                                </div>
-                                <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
-                            </label>
+
                             <label class="input col checkbox-label">
-                                <input type="checkbox" class="input-field__input" id="pkv" onclick="toggleInsurance('pkv'); calculate();" />
+                                <input type="checkbox" class="input-field__input" id="pkv"
+                                    onclick="toggleInsurance('pkv'); calculate();" />
                                 <p class="input__title">Private Krankenversicherung</p>
-                                <input type="checkbox" class="input-field__input" id="gkv" checked onclick="toggleInsurance('gkv'); calculate();" style="margin-left: 20px;" />
+                                <input type="checkbox" class="input-field__input" id="gkv" checked
+                                    onclick="toggleInsurance('gkv'); calculate();" style="margin-left: 20px;" />
                                 <p class="input__title">Gesetzliche Krankenversicherung</p>
                             </label>
                         </div>
@@ -181,6 +220,12 @@
                 <canvas id="zinseszinsChart"></canvas>
             </div>
             <div class="results" id="results">
+                <div class="result-box">
+                    Jährliche Ersparnis: <span id="yearlySavings">0</span> €
+                </div>
+                <div class="result-box highlight">
+                    Gesamte Ersparnis bis 67: <span id="totalSavings">0</span> €
+                </div>
             </div>
         </div>
     </div>
@@ -196,11 +241,7 @@
             document.getElementById('sumValue').innerText = value;
         }
 
-        function updateIncomeValue(value) {
-            document.getElementById('incomeValue').innerText = value;
-        }
-
-        document.getElementById('income').addEventListener('input', function(event) {
+        document.getElementById('income').addEventListener('input', function (event) {
             calculate();
         });
 
@@ -249,78 +290,79 @@
                 }
                 obj.savings = t;
                 obj.total += t;
-                value = (value + t) * 1.05; 
+                value = (value + t) * 1.07;
                 obj.data.push(value);
             }
+
             return obj;
         }
 
         function verzinsteSparsumme(years, sum) {
             const data = [];
-            let x = sum *12;
-            let value = 0; 
+            let value = 0;
             for (let i = years; i < 68; i++) {
-                value += x; 
-                value += value * 0.03; 
+                value += sum * 12;
+                value += value * 0.02;
                 data.push(value);
+                console.log(value)
             }
             return data;
         }
 
         function calculate() {
-            const sum = document.getElementById('sum');
-            const income = document.getElementById('income');
+            const years = parseInt(document.getElementById('years').value);
+            const sum = parseInt(document.getElementById('sum').value);
+            const income = parseInt(document.getElementById('income').value);
+            const pkv = document.getElementById('pkv').checked ? 1 : 0;
 
-            if (!/^\d+$/.test(sum.value)) {
-                sum.classList.add('input-field__error');
-                document.getElementById('sumError').classList.add('active');
-                return;
+            const result = zinseszins(years, sum, pkv, income);
+
+            const yearlySavings = document.getElementById('yearlySavings');
+            const totalSavings = document.getElementById('totalSavings');
+
+            yearlySavings.innerText = result.savings.toLocaleString();
+            totalSavings.innerText = result.total.toLocaleString();
+
+            if (chart) {
+                chart.destroy();
             }
-            if (!/^\d+$/.test(income.value)) {
-                income.classList.add('input-field__error');
-                document.getElementById('incomeError').classList.add('active');
-                return;
-            }
 
-            const years = document.getElementById('years');
-            const pkv = document.getElementById('pkv');
-
-            const labels = Array.from({ length: 68 - parseInt(years.value) + 1 }, (_, i) => parseInt(years.value) + i);
-
-            const obj = zinseszins(parseInt(years.value), parseInt(sum.value), pkv.checked, parseInt(income.value));
-
-            const data = {
-                labels: labels,
-                datasets: [{
-                    label: 'Ersparnis',
-                    data: obj.data,
-                    fill: false,
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#007bff',
-                    pointBorderColor: '#fff',
-                    pointRadius: 5,
-                    tension: 0.4
-                },
-                {
-                    label: 'Verzinste Sparsumme (5%)',
-                    data: verzinsteSparsumme(parseInt(years.value), parseInt(sum.value)),
-                    fill: false,
-                    borderColor: '#ff5733',
-                    backgroundColor: 'rgba(255, 87, 51, 0.2)',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#ff5733',
-                    pointBorderColor: '#fff',
-                    pointRadius: 5,
-                    tension: 0.4
-                }]
-            };
-
-            const config = {
+            const ctx = document.getElementById('zinseszinsChart').getContext('2d');
+            chart = new Chart(ctx, {
                 type: 'line',
-                data: data,
+                data: {
+                    labels: Array.from({ length: result.data.length }, (_, i) => years + i),
+                    datasets: [
+                        //unwichtig
+                        {
+                            label: 'Verzinste Sparsumme',
+                            data: verzinsteSparsumme(years, sum),
+                            fill: true,
+                            borderColor: '#f2f2f2',
+                            backgroundColor: '#f2f2f2',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#f2f2f2',
+                            pointBorderColor: '#d9d9d9',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            tension: 0.4
+                        }, {
+                            label: 'Sparsumme',
+                            data: result.data,
+                            borderColor: '#95a1ff',
+                            backgroundColor: '#95a1ff',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#95a1ff',
+                            pointBorderColor: '#6678ff',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            tension: 0.4,
+                            fill: true,
+                        }]
+                },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: {
                             title: {
@@ -361,9 +403,22 @@
                         },
                         tooltip: {
                             enabled: true,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Hintergrundfarbe des Tooltip-Popups
+                            borderColor: 'rgba(0, 0, 0, 0.5)', // Randfarbe des Tooltip-Popups
+                            borderWidth: 1, // Breite des Tooltip-Rands
+                            titleColor: 'rgba(0, 0, 0, 0.8)', // Farbe des Titels im Tooltip-Popup
+                            bodyColor: 'rgba(0, 0, 0, 0.8)', // Farbe des Textkörpers im Tooltip-Popup
+                            titleAlign: 'center',
+                            bodyAlign: 'start',
+                            mode: 'nearest',
+                            intersect: false,
+                            position: 'nearest',
                             callbacks: {
+                                title: function (context) {
+                                    return 'Mit ' + context[0].label + " Jahren"; // Hier erweitern wir den Titel um den Monat des Datenpunkts
+                                },
                                 label: function (context) {
-                                    return context.dataset.label + ': ' + context.raw.toFixed(2) + ' €';
+                                    return 'Ersparnis: ' + context.raw.toFixed(2) + ' €';
                                 }
                             }
                         }
@@ -377,50 +432,10 @@
                         }
                     }
                 }
-            };
-
-            if (chart) {
-                chart.destroy();
-            }
-            chart = new Chart(
-                document.getElementById('zinseszinsChart'),
-                config
-            );
-
-            // Berechnungen für die Ergebnisse
-            const yearlySavings = parseInt(obj.savings);
-            const totalSavings = parseInt(obj.total);
-
-            // Anzeige der Ergebnisse
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <p>Jährliche Ersparnis: ${yearlySavings.toFixed(2)} €</p>
-                <p>Gesamte Ersparnis bis 67: ${totalSavings.toFixed(2)} €</p>
-            `;
+            });
         }
 
-        function handleResize() {
-            const inputBox = document.getElementById('inputBox');
-            const chartBox = document.getElementById('chartBox');
-
-            if (window.innerWidth <= 768) {
-                inputBox.style.width = '100%';
-                chartBox.style.width = '100%';
-                inputBox.style.order = '1';
-                chartBox.style.order = '2';
-            } else {
-                inputBox.style.width = '48%';
-                chartBox.style.width = '48%';
-                inputBox.style.order = 'initial';
-                chartBox.style.order = 'initial';
-            }
-        }
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('load', () => {
-            handleResize();
-            calculate();
-        });
+        document.addEventListener('DOMContentLoaded', calculate);
     </script>
 </body>
 
