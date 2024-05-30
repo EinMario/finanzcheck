@@ -165,12 +165,17 @@
         }
 
         @media (max-width: 767px) {
+            body {
+        width: 100%; /* Die Breite des Body-Elements auf 100% setzen, um den gesamten Bildschirm auszufüllen */
+        margin: 0; /* Den Seitenrand entfernen, um den Inhalt über den gesamten Bildschirm zu strecken */
+        padding: 10px; /* Einen kleinen Innenabstand hinzufügen, um den Inhalt vom Rand zu trennen */
+    }
             .container {
                 flex-direction: column;
             }
 
             .box {
-                width: 100%;
+                width: 90%;
                 margin-bottom: 20px;
             }
 
@@ -179,7 +184,7 @@
             }
 
             .result-box {
-                width: 100%;
+                width: 90%;
                 margin-bottom: 10px;
                 margin-left: 5%;
                 margin-right: 5%;
