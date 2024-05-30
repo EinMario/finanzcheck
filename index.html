@@ -335,7 +335,7 @@
                     datasets: [
                         //unwichtig
                         {
-                            label: 'Verzinste Sparsumme',
+                            label: 'Ohne Finanzstarter',
                             data: verzinsteSparsumme(years, sum),
                             fill: true,
                             borderColor: '#f2f2f2',
@@ -347,7 +347,7 @@
                             pointHoverRadius: 7,
                             tension: 0.4
                         }, {
-                            label: 'Sparsumme',
+                            label: 'Mit Finanzstarter',
                             data: result.data,
                             borderColor: '#95a1ff',
                             backgroundColor: '#95a1ff',
@@ -403,11 +403,11 @@
                         },
                         tooltip: {
                             enabled: true,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Hintergrundfarbe des Tooltip-Popups
-                            borderColor: 'rgba(0, 0, 0, 0.5)', // Randfarbe des Tooltip-Popups
-                            borderWidth: 1, // Breite des Tooltip-Rands
-                            titleColor: 'rgba(0, 0, 0, 0.8)', // Farbe des Titels im Tooltip-Popup
-                            bodyColor: 'rgba(0, 0, 0, 0.8)', // Farbe des Textkörpers im Tooltip-Popup
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                            borderColor: 'rgba(0, 0, 0, 0.5)', 
+                            borderWidth: 1,
+                            titleColor: 'rgba(0, 0, 0, 0.8)',
+                            bodyColor: 'rgba(0, 0, 0, 0.8)', 
                             titleAlign: 'center',
                             bodyAlign: 'start',
                             mode: 'nearest',
@@ -415,7 +415,7 @@
                             position: 'nearest',
                             callbacks: {
                                 title: function (context) {
-                                    return 'Mit ' + context[0].label + " Jahren"; // Hier erweitern wir den Titel um den Monat des Datenpunkts
+                                    return 'Mit ' + context[0].label + " Jahren"; 
                                 },
                                 label: function (context) {
                                     return 'Ersparnis: ' + context.raw.toFixed(2) + ' €';
