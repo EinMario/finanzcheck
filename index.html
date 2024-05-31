@@ -133,8 +133,10 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
+            max-width: 600px;
+            justify-content: flex-start;
+            padding-left: 10px !important;
+            /* Entfernt das Padding */
         }
 
         .checkbox-label .input-field__input {
@@ -144,8 +146,12 @@
 
         .checkbox-label input[type="checkbox"] {
             display: block;
-            margin-top: 4%;
             margin-left: 0;
+        }
+
+        .checkbox-text {
+            font-weight: bold;
+            margin-left: 10px;
         }
 
         .chart-container {
@@ -190,6 +196,7 @@
         .input__title {
             margin-left: 10px;
         }
+
 
         @media (max-width: 767px) {
             body {
@@ -268,8 +275,8 @@
                                 <p class="input__title">Jahreseinkommen:</p>
                                 <div class="input-field row">
                                     <span class="input-field__icon">€</span>
-                                    <input type="text" class="input-field__input" id="income" value="60000" style="border: 0px;"
-                                        oninput="validateIncomeInput(this); calculate();" />
+                                    <input type="text" class="input-field__input" id="income" value="60000"
+                                        style="border: 0px;" oninput="validateIncomeInput(this); calculate();" />
                                 </div>
                                 <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
                             </label>
@@ -287,18 +294,17 @@
                                         value="500" oninput="updateSumValue(this.value); calculate();" />
                                 </div>
                             </label>
-
-                            <label
-                                style="margin-top: 30px; align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; margin-bottom: 20px;">
-                                <input type="checkbox" class="accent" id="gkv" checked
-                                    onclick="toggleInsurance('gkv'); calculate();" />
-                                <label style="font-weight: bold; "> Gesetzliche Krankenversicherung</label>
-                            </label>
-                            <label
-                                style="align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; margin-bottom: 20px;">
-                                <input type="checkbox" class="accent" id="pkv"
-                                    onclick="toggleInsurance('pkv'); calculate();" />
-                                <label style="font-weight: bold;"> Private Krankenversicherung</label>
+                            <label class="col" style="margin-top: 20px !important;">
+                                <label class="checkbox-label" style="">
+                                    <input type="checkbox" class="accent" id="gkv" checked
+                                        onclick="toggleInsurance('gkv'); calculate();" />
+                                    <span class="checkbox-text">Gesetzliche Krankenversicherung</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="accent" id="pkv"
+                                        onclick="toggleInsurance('pkv'); calculate();" />
+                                    <span class="checkbox-text">Private Krankenversicherung</span>
+                                </label>
                             </label>
                         </div>
                     </div>
@@ -315,7 +321,7 @@
                     Jährliche Ersparnis: <br><span id="yearlySavings">0</span>
                 </div>
                 <div class="result-box highlight">
-                    Gesamte Ersparnis bis 67: <br><span id="totalSavings">0</span>
+                    Gesamte Ersparnis: <br><span id="totalSavings">0</span>
                 </div>
             </div>
         </div>
