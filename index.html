@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
+        .base {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
             margin: 0;
@@ -196,7 +196,7 @@
 
 
         @media (max-width: 767px) {
-            body {
+            .base {
                 width: 100%;
                 margin: 0;
                 padding: 10px;
@@ -230,7 +230,7 @@
                 width: 100%;
                 margin: 10px auto;
             }
-            
+
 
             .results {
                 flex-direction: column;
@@ -266,68 +266,69 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="box" id="inputBox">
-            <div class="calculator-settings">
-                <div class="calculator-setting" id="calculator_form">
-                    <div class="calculator-content col">
-                        <div class="input-wrapper row loan_type related-to-loan_type-0">
-                            <label class="input col">
-                                <p class="input__title">Jahreseinkommen:</p>
-                                <div class="input-field row">
-                                    <span class="input-field__icon">€</span>
-                                    <input type="text" class="input-field__input" id="income" value="60000"
-                                        style="border: 0px;" oninput="validateIncomeInput(this); calculate();" />
-                                </div>
-                                <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
-                            </label>
-                            <label class="input col">
-                                <p class="input__title">Alter: <span id="yearsValue">21</span> Jahre</p>
-                                <div class="input-field row">
-                                    <input type="range" class="input-field__input accent" id="years" min="18" max="67"
-                                        value="21" oninput="updateYearsValue(this.value); calculate();" />
-                                </div>
-                            </label>
-                            <label class="input col">
-                                <p class="input__title">Monatliche Sparsumme: <span id="sumValue">500</span> €</p>
-                                <div class="input-field row">
-                                    <input type="range" class="input-field__input accent" id="sum" min="0" max="3000"
-                                        value="500" oninput="updateSumValue(this.value); calculate();" />
-                                </div>
-                            </label>
-                            <label class="col" style="margin-top: 20px !important;">
-                                <label class="checkbox-label" style="">
-                                    <input type="checkbox" class="accent" id="gkv" checked
-                                        onclick="toggleInsurance('gkv'); calculate();" />
-                                    <span class="checkbox-text">Gesetzlich Versichert</span>
+    <div class="base">
+        <div class="container">
+            <div class="box" id="inputBox">
+                <div class="calculator-settings">
+                    <div class="calculator-setting" id="calculator_form">
+                        <div class="calculator-content col">
+                            <div class="input-wrapper row loan_type related-to-loan_type-0">
+                                <label class="input col">
+                                    <p class="input__title">Jahreseinkommen:</p>
+                                    <div class="input-field row">
+                                        <span class="input-field__icon">€</span>
+                                        <input type="text" class="input-field__input" id="income" value="60000"
+                                            style="border: 0px;" oninput="validateIncomeInput(this); calculate();" />
+                                    </div>
+                                    <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
                                 </label>
-                                <label class="checkbox-label">
-                                    <input type="checkbox" class="accent" id="pkv"
-                                        onclick="toggleInsurance('pkv'); calculate();" />
-                                    <span class="checkbox-text">Privat Versichert</span>
+                                <label class="input col">
+                                    <p class="input__title">Alter: <span id="yearsValue">21</span> Jahre</p>
+                                    <div class="input-field row">
+                                        <input type="range" class="input-field__input accent" id="years" min="18"
+                                            max="67" value="21" oninput="updateYearsValue(this.value); calculate();" />
+                                    </div>
                                 </label>
-                            </label>
+                                <label class="input col">
+                                    <p class="input__title">Monatliche Sparsumme: <span id="sumValue">500</span> €</p>
+                                    <div class="input-field row">
+                                        <input type="range" class="input-field__input accent" id="sum" min="0"
+                                            max="3000" value="500" oninput="updateSumValue(this.value); calculate();" />
+                                    </div>
+                                </label>
+                                <label class="col" style="margin-top: 20px !important;">
+                                    <label class="checkbox-label" style="">
+                                        <input type="checkbox" class="accent" id="gkv" checked
+                                            onclick="toggleInsurance('gkv'); calculate();" />
+                                        <span class="checkbox-text">Gesetzlich Versichert</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" class="accent" id="pkv"
+                                            onclick="toggleInsurance('pkv'); calculate();" />
+                                        <span class="checkbox-text">Privat Versichert</span>
+                                    </label>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box" id="chartBox" style="margin-right: 0px;">
-            <div class="chart-container">
-                <canvas id="zinseszinsChart"></canvas>
-            </div>
-            <div class="results" id="results">
-                <div class="result-box">
-                    Jährliche Ersparnis: <br><span id="yearlySavings">0</span>
+            <div class="box" id="chartBox" style="margin-right: 0px;">
+                <div class="chart-container">
+                    <canvas id="zinseszinsChart"></canvas>
                 </div>
-                <div class="result-box highlight">
-                    Gesamte Ersparnis: <br><span id="totalSavings">0</span>
+                <div class="results" id="results">
+                    <div class="result-box">
+                        Jährliche Ersparnis: <br><span id="yearlySavings">0</span>
+                    </div>
+                    <div class="result-box highlight">
+                        Gesamte Ersparnis: <br><span id="totalSavings">0</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         let chart;
 
