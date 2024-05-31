@@ -13,7 +13,6 @@
             margin: 0;
             padding: 0;
             border: none;
-            border-radius: 20px;
             box-shadow: none;
         }
 
@@ -185,7 +184,6 @@
 
         .input__title {
             margin-left: 10px;
-            /* Abstand zwischen Checkbox und Text */
         }
 
         @media (max-width: 767px) {
@@ -285,13 +283,17 @@
                                 </div>
                             </label>
 
-                            <label style="margin-top: 10px; align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px;">
-                                <input type="checkbox" class="accent" id="pkv" onclick="toggleInsurance('pkv'); calculate();" />
-                                <p style="font-weight: bold;">Private Krankenversicherung</p>
+                            <label
+                                style="margin-top: 30px; align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; margin-bottom: 20px;">
+                                <input type="checkbox" class="accent" id="gkv" checked
+                                    onclick="toggleInsurance('gkv'); calculate();" />
+                                <label style="font-weight: bold; "> Gesetzliche Krankenversicherung</label>
                             </label>
-                            <label style="align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; ">
-                                <input type="checkbox" class="accent" id="gkv" checked onclick="toggleInsurance('gkv'); calculate();" />
-                                <p style="font-weight: bold;">Gesetzliche Krankenversicherung</p>
+                            <label
+                                style="align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; margin-bottom: 20px;">
+                                <input type="checkbox" class="accent" id="pkv"
+                                    onclick="toggleInsurance('pkv'); calculate();" />
+                                <label style="font-weight: bold;"> Private Krankenversicherung</label>
                             </label>
                         </div>
                     </div>
@@ -399,6 +401,13 @@
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(zahl);
         }
 
+        function updateChartData(chart, labels, dataset1, dataset2) {
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = dataset1;
+            chart.data.datasets[1].data = dataset2;
+            chart.update();
+        }
+
         function calculate() {
             const years = parseInt(document.getElementById('years').value);
             const sum = parseInt(document.getElementById('sum').value);
@@ -410,119 +419,122 @@
             const yearlySavings = document.getElementById('yearlySavings');
             const totalSavings = document.getElementById('totalSavings');
 
-            yearlySavings.innerText = formatNumber( result.savings);
-            totalSavings.innerText = formatNumber( result.total);
+            yearlySavings.innerText = formatNumber(result.savings);
+            totalSavings.innerText = formatNumber(result.total);
+
+            const labels = Array.from({ length: result.data.length }, (_, i) => years + i);
+            const dataset1 = verzinsteSparsumme(years, sum);
+            const dataset2 = result.data;
 
             if (chart) {
-                chart.destroy();
-            }
-
-            const ctx = document.getElementById('zinseszinsChart').getContext('2d');
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({ length: result.data.length }, (_, i) => years + i),
-                    datasets: [
-                        {
-                            label: 'Ohne Finanzstarter',
-                            data: verzinsteSparsumme(years, sum),
-                            fill: true,
-                            borderColor: '#f2f2f2',
-                            backgroundColor: 'rgba(242, 242, 242, 0.75)',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#f2f2f2',
-                            pointBorderColor: '#d9d9d9',
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
-                            tension: 0.4
-                        }, {
-                            label: 'Mit Finanzstarter',
-                            data: result.data,
-                            borderColor: '#95a1ff',
-                            backgroundColor: '#95a1ff',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#95a1ff',
-                            pointBorderColor: '#6678ff',
-                            pointRadius: 5,
-                            pointHoverRadius: 7,
-                            tension: 0.4,
-                            fill: true,
-                        }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Jahre',
-                                color: '#333',
-                                font: {
-                                    family: 'Arial',
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Kapital',
-                                color: '#333',
-                                font: {
-                                    family: 'Arial',
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        }
+                updateChartData(chart, labels, dataset1, dataset2);
+            } else {
+                const ctx = document.getElementById('zinseszinsChart').getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Ohne Finanzstarter',
+                                data: dataset1,
+                                fill: true,
+                                borderColor: '#f2f2f2',
+                                backgroundColor: 'rgba(242, 242, 242, 0.75)',
+                                borderWidth: 2,
+                                pointBackgroundColor: '#f2f2f2',
+                                pointBorderColor: '#d9d9d9',
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                tension: 0.4
+                            }, {
+                                label: 'Mit Finanzstarter',
+                                data: dataset2,
+                                borderColor: '#95a1ff',
+                                backgroundColor: '#95a1ff',
+                                borderWidth: 2,
+                                pointBackgroundColor: '#95a1ff',
+                                pointBorderColor: '#6678ff',
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                tension: 0.4,
+                                fill: true,
+                            }]
                     },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            labels: {
-                                color: '#333',
-                                //borderRadius: 100,
-                                font: {
-                                    family: 'Arial',
-                                    size: 12
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Jahre',
+                                    color: '#333',
+                                    font: {
+                                        family: 'Arial',
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Kapital',
+                                    color: '#333',
+                                    font: {
+                                        family: 'Arial',
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
                                 }
                             }
                         },
-                        tooltip: {
-                            enabled: true,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                            borderColor: 'rgba(0, 0, 0, 0.5)',
-                            borderWidth: 1,
-                            titleColor: 'rgba(0, 0, 0, 0.8)',
-                            bodyColor: 'rgba(0, 0, 0, 0.8)',
-                            titleAlign: 'center',
-                            bodyAlign: 'start',
-                            mode: 'nearest',
-                            intersect: false,
-                            position: 'nearest',
-                            callbacks: {
-                                title: function (context) {
-                                    return 'Mit ' + context[0].label + " Jahren";
-                                },
-                                label: function (context) {
-                                    return 'Ersparnis: ' + formatNumber(context.raw);
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    font: {
+                                        family: 'Arial',
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                borderColor: 'rgba(0, 0, 0, 0.5)',
+                                borderWidth: 1,
+                                titleColor: 'rgba(0, 0, 0, 0.8)',
+                                bodyColor: 'rgba(0, 0, 0, 0.8)',
+                                titleAlign: 'center',
+                                bodyAlign: 'start',
+                                mode: 'nearest',
+                                intersect: false,
+                                position: 'nearest',
+                                callbacks: {
+                                    title: function (context) {
+                                        return 'Mit ' + context[0].label + " Jahren";
+                                    },
+                                    label: function (context) {
+                                        return 'Ersparnis: ' + formatNumber(context.raw);
+                                    }
                                 }
                             }
-                        }
-                    },
-                    elements: {
-                        line: {
-                            tension: 0.4
                         },
-                        point: {
-                            radius: 5
+                        elements: {
+                            line: {
+                                tension: 0.4
+                            },
+                            point: {
+                                radius: 5
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         document.addEventListener('DOMContentLoaded', calculate);
