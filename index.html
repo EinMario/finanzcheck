@@ -192,13 +192,13 @@
             .base {
                 width: 100%;
                 margin: 0;
-                padding: 10px;
             }
 
             .container {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+
             }
 
             .input-wrapper {
@@ -207,6 +207,9 @@
 
             .input-field {
                 margin-top: 10px;
+            }
+            .calculator-settings {
+                margin-bottom: 0px;
             }
 
             .box {
@@ -222,6 +225,9 @@
             .input.col {
                 width: 100%;
                 margin: 10px auto;
+            }
+            .checkbox-label {
+                margin-bottom: 10px;
             }
 
 
@@ -289,7 +295,7 @@
                                             max="3000" value="500" oninput="updateSumValue(this.value); calculate();" />
                                     </div>
                                 </label>
-                                <label class="col" style="margin-top: 20px !important;">
+                                <label class="col" style="margin-top: 10px !important;">
                                     <label class="checkbox-label" style="">
                                         <input type="checkbox" class="accent" id="gkv" checked
                                             onclick="toggleInsurance('gkv'); calculate();" />
@@ -385,6 +391,7 @@
                 obj.savings = t;
                 obj.total += t;
                 value = (value + t) * 1.07;
+                value = parseFloat(value.toFixed(2));
                 obj.data.push(value);
             }
 
@@ -397,8 +404,8 @@
             for (let i = years; i < 68; i++) {
                 value += sum * 12;
                 value += value * 0.02;
+                value = parseFloat(value.toFixed(2));
                 data.push(value);
-                console.log(value)
             }
             return data;
         }
@@ -525,7 +532,7 @@
                                         return 'Mit ' + context[0].label + " Jahren";
                                     },
                                     label: function (context) {
-                                        return 'Ersparnis: ' + formatNumber(context.raw);
+                                        return 'Ersparnis: ' + parseFloat( context.raw).toLocaleString('de-DE').replace('.', ',').replace(/(\d)(?=(\d{3})+(,))/g, '$1.') + '€';
                                     }
                                 }
                             }
