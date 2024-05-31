@@ -136,7 +136,6 @@
             max-width: 600px;
             justify-content: flex-start;
             padding-left: 10px !important;
-            /* Entfernt das Padding */
         }
 
         .checkbox-label .input-field__input {
@@ -215,9 +214,13 @@
                 width: 100%;
             }
 
+            .input-field {
+                margin-top: 10px;
+            }
+
             .box {
                 width: 100%;
-                margin-right: 20px;
+                margin: 10px 0;
             }
 
             .checkbox-label .input-field__input {
@@ -229,24 +232,24 @@
                 width: 100%;
                 margin: 10px auto;
             }
+            
 
             .results {
                 flex-direction: column;
+                align-items: center;
             }
 
             .result-box {
                 width: 92%;
-                margin-bottom: 10px;
-                margin-left: 0px;
-                margin-right: 0px;
-                justify-content: center;
-                align-items: center;
-
+                margin: 10px 0;
+                padding: 15px;
+                text-align: center;
             }
 
             .checkbox-label {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                align-items: baseline;
             }
 
             .checkbox-label input[type="checkbox"] {
@@ -258,8 +261,8 @@
             .input__title {
                 margin-left: 0;
                 display: inline;
+                margin-bottom: 10px;
             }
-
         }
     </style>
 </head>
