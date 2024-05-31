@@ -69,26 +69,31 @@
         .input-field {
             display: flex;
             align-items: center;
-            background-color: #f2f2f2;
+            background-color: #ffffff;
             padding: 10px;
             border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .input-field__input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 4px;
             font-size: 16px;
             margin-left: 10px;
+            background-color: transparent;
+        }
+
+        .input-field__input:focus {
+            outline: none;
+            box-shadow: none;
         }
 
         .input-field__icon {
-            background-color: #e0e0e0;
-            padding: 10px;
-            border-radius: 10px 0 0 10px;
-            font-size: 16px;
+            font-size: 18px;
             color: #666;
+            margin-left: 10px;
         }
 
         .input-field__error {
@@ -121,7 +126,7 @@
         }
 
         .button--primary:hover {
-            background-color: #6777f1;
+            background-color: #5566cc;
         }
 
         .checkbox-label {
@@ -262,9 +267,9 @@
                             <label class="input col">
                                 <p class="input__title">Jahreseinkommen:</p>
                                 <div class="input-field row">
+                                    <span class="input-field__icon">€</span>
                                     <input type="text" class="input-field__input" id="income" value="60000"
                                         oninput="validateIncomeInput(this); calculate();" />
-                                    <span class="input-field__hint">&nbsp;€</span>
                                 </div>
                                 <p class="error-message" id="incomeError">Bitte geben Sie eine gültige Zahl ein.</p>
                             </label>
