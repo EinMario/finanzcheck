@@ -22,10 +22,11 @@
             flex-direction: row;
             justify-content: space-between;
             flex-wrap: nowrap;
-            padding: 20px;
+            padding: 10px;
             background-color: #ffffff;
             border-radius: 20px;
-            margin: 20px;
+            margin: 10px;
+            margin-right: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -35,8 +36,6 @@
             border: none;
             border-radius: 20px;
             box-shadow: none;
-            padding: 20px;
-            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
         }
@@ -207,8 +206,8 @@
             }
 
             .box {
-                width: 90%;
-                margin-bottom: 20px;
+                width: 100%;
+                margin-right: 20px;
             }
 
             .checkbox-label .input-field__input {
@@ -217,7 +216,7 @@
             }
 
             .input.col {
-                width: 90%;
+                width: 100%;
                 margin: 10px auto;
             }
 
@@ -226,9 +225,10 @@
             }
 
             .result-box {
-                width: 90%;
+                width: 92%;
                 margin-bottom: 10px;
-                margin-right: 5%;
+                margin-left: 0px;
+                margin-right: 0px;
                 justify-content: center;
                 align-items: center;
 
@@ -285,14 +285,13 @@
                                 </div>
                             </label>
 
-                            <label class="input col checkbox-label">
-                                <input type="checkbox" class="input-field__input accent" id="pkv"
-                                    onclick="toggleInsurance('pkv'); calculate();" />
-                                <p class="input__title">Private Krankenversicherung</p>
-                                <input type="checkbox" class="input-field__input accent" id="gkv" checked
-                                    onclick="toggleInsurance('gkv'); calculate();"
-                                    style="margin-top: 4%; margin-left: 20px;" />
-                                <p class="input__title">Gesetzliche Krankenversicherung</p>
+                            <label style="margin-top: 10px; align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px;">
+                                <input type="checkbox" class="accent" id="pkv" onclick="toggleInsurance('pkv'); calculate();" />
+                                <p style="font-weight: bold;">Private Krankenversicherung</p>
+                            </label>
+                            <label style="align-items: center; margin: 0 auto; display: flex; flex-direction: row; max-width: 600px; ">
+                                <input type="checkbox" class="accent" id="gkv" checked onclick="toggleInsurance('gkv'); calculate();" />
+                                <p style="font-weight: bold;">Gesetzliche Krankenversicherung</p>
                             </label>
                         </div>
                     </div>
@@ -300,16 +299,16 @@
             </div>
         </div>
 
-        <div class="box" id="chartBox">
+        <div class="box" id="chartBox" style="margin-right: 0px;">
             <div class="chart-container">
                 <canvas id="zinseszinsChart"></canvas>
             </div>
             <div class="results" id="results">
                 <div class="result-box">
-                    Jährliche Ersparnis: <span id="yearlySavings">0</span> €
+                    Jährliche Ersparnis: <br><span id="yearlySavings">0</span>
                 </div>
                 <div class="result-box highlight">
-                    Gesamte Ersparnis bis 67: <span id="totalSavings">0</span> €
+                    Gesamte Ersparnis bis 67: <br><span id="totalSavings">0</span>
                 </div>
             </div>
         </div>
@@ -347,8 +346,10 @@
         function toggleInsurance(selected) {
             if (selected === 'pkv') {
                 document.getElementById('gkv').checked = false;
+                document.getElementById('pkv').checked = true;
             } else {
                 document.getElementById('pkv').checked = false;
+                document.getElementById('gkv').checked = true;
             }
         }
 
@@ -409,8 +410,8 @@
             const yearlySavings = document.getElementById('yearlySavings');
             const totalSavings = document.getElementById('totalSavings');
 
-            yearlySavings.innerText = result.savings.toLocaleString();
-            totalSavings.innerText = result.total.toLocaleString();
+            yearlySavings.innerText = formatNumber( result.savings);
+            totalSavings.innerText = formatNumber( result.total);
 
             if (chart) {
                 chart.destroy();
@@ -427,7 +428,7 @@
                             data: verzinsteSparsumme(years, sum),
                             fill: true,
                             borderColor: '#f2f2f2',
-                            backgroundColor: '#f2f2f2',
+                            backgroundColor: 'rgba(242, 242, 242, 0.75)',
                             borderWidth: 2,
                             pointBackgroundColor: '#f2f2f2',
                             pointBorderColor: '#d9d9d9',
@@ -483,6 +484,7 @@
                             position: 'top',
                             labels: {
                                 color: '#333',
+                                //borderRadius: 100,
                                 font: {
                                     family: 'Arial',
                                     size: 12
