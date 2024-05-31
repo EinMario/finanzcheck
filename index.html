@@ -130,11 +130,19 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .checkbox-label .input-field__input {
             width: auto;
             margin-right: 10px;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: block;
+            margin-top: 4%;
+            margin-left: 0;
         }
 
         .chart-container {
@@ -166,28 +174,35 @@
             color: white;
         }
 
+        .accent {
+            accent-color: #6777f1;
+        }
+
+        .input-row {
+    display: flex;
+    align-items: center;
+    margin-top: 2%;
+}
+
+.input__title {
+    margin-left: 10px; /* Abstand zwischen Checkbox und Text */
+}
+
         @media (max-width: 767px) {
             body {
                 width: 100%;
-                /* Die Breite des Body-Elements auf 100% setzen, um den gesamten Bildschirm auszufüllen */
                 margin: 0;
-                /* Den Seitenrand entfernen, um den Inhalt über den gesamten Bildschirm zu strecken */
                 padding: 10px;
-                /* Einen kleinen Innenabstand hinzufügen, um den Inhalt vom Rand zu trennen */
             }
 
             .container {
                 display: flex;
-                /* Aktiviere Flexbox */
                 flex-direction: column;
-                /* Elemente in einer Spalte anordnen */
                 align-items: center;
-                /* Horizontal zentrieren */
             }
 
             .input-wrapper {
                 width: 100%;
-                /* Setze die Breite auf 100% */
             }
 
             .box {
@@ -202,9 +217,7 @@
 
             .input.col {
                 width: 90%;
-                /* Setze die Breite auf 90% */
                 margin: 10px auto;
-                /* Zentriere das Element horizontal und füge Abstand oben und unten hinzu */
             }
 
             .results {
@@ -216,9 +229,7 @@
                 margin-bottom: 10px;
                 margin-right: 5%;
                 justify-content: center;
-                /* Horizontal zentrieren */
                 align-items: center;
-                /* Vertikal zentrieren */
 
             }
 
@@ -227,10 +238,15 @@
                 flex-direction: column;
             }
 
+            .checkbox-label input[type="checkbox"] {
+                display: block;
+                margin-top: 4%;
+                margin-left: 0;
+            }
+
             .input__title {
                 margin-left: 0;
                 display: inline;
-                /* Zurücksetzen des linken Rands für die Titel */
             }
 
         }
@@ -256,23 +272,23 @@
                             <label class="input col">
                                 <p class="input__title">Alter: <span id="yearsValue">21</span> Jahre</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="years" min="18" max="67"
+                                    <input type="range" class="input-field__input accent" id="years" min="18" max="67"
                                         value="21" oninput="updateYearsValue(this.value); calculate();" />
                                 </div>
                             </label>
                             <label class="input col">
                                 <p class="input__title">Monatliche Sparsumme: <span id="sumValue">500</span> €</p>
                                 <div class="input-field row">
-                                    <input type="range" class="input-field__input" id="sum" min="0" max="3000"
+                                    <input type="range" class="input-field__input accent" id="sum" min="0" max="3000"
                                         value="500" oninput="updateSumValue(this.value); calculate();" />
                                 </div>
                             </label>
 
                             <label class="input col checkbox-label">
-                                <input type="checkbox" class="input-field__input" id="pkv"
-                                    onclick="toggleInsurance('pkv'); calculate();" style="margin-top: 2%;" />
+                                <input type="checkbox" class="input-field__input accent" id="pkv"
+                                    onclick="toggleInsurance('pkv'); calculate();" > ASD</label>
                                 <p class="input__title">Private Krankenversicherung</p>
-                                <input type="checkbox" class="input-field__input" id="gkv" checked
+                                <input type="checkbox" class="input-field__input accent" id="gkv" checked
                                     onclick="toggleInsurance('gkv'); calculate();"
                                     style="margin-top: 4%; margin-left: 20px;" />
                                 <p class="input__title">Gesetzliche Krankenversicherung</p>
@@ -378,7 +394,6 @@
         }
 
         function formatNumber(zahl) {
-            // Die Zahl in das Währungsformat formatieren
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(zahl);
         }
 
