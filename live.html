@@ -208,7 +208,6 @@
             .input-field {
                 margin-top: 10px;
             }
-
             .calculator-settings {
                 margin-bottom: 0px;
             }
@@ -227,7 +226,6 @@
                 width: 100%;
                 margin: 10px auto;
             }
-
             .checkbox-label {
                 margin-bottom: 10px;
             }
@@ -374,33 +372,22 @@
                 data: [],
                 savings: 0,
                 total: 0
-            };
+            }
 
             let value = sum;
-            const initialAge = 68 - years;
-
-            for (let i = 0; i < years; i++) {
+            for (let i = years; i < 68; i++) {
                 let t = 0;
-                const currentAge = initialAge + i;
-
-                if (currentAge < 70) {
-                    if (pkv === 0) {
-                        // unter 70 mit GKV
-                        t = (sum * 0.0035) * 12 + 500;
-                    } else {
-                        // unter 70 mit PKV
-                        t = (sum * 0.0035) * 12 + 1800;
-                    }
+                if (sum === 2000 && pkv === 0 && income > 120000) {
+                    t = 12400;
                 } else {
-                    if (pkv === 0) {
-                        // über 70 mit GKV
-                        t = (sum * 0.0042) * 12 + 3600;
-                    } else {
-                        // über 70 mit PKV
-                        t = (sum * 0.0042) * 12 + 1800;
-                    }
+                    t = Math.min(
+                        12400,
+                        Math.max(
+                            2500,
+                            2500 + (sum / 2000 * 5000) + (pkv * 1000) + (income / 30000 * 1500) - (years - 30) * 50
+                        )
+                    );
                 }
-
                 obj.savings = t;
                 obj.total += t;
                 value = (value + t) * 1.07;
@@ -545,7 +532,7 @@
                                         return 'Mit ' + context[0].label + " Jahren";
                                     },
                                     label: function (context) {
-                                        return 'Ersparnis: ' + parseFloat(context.raw).toLocaleString('de-DE').replace('.', ',').replace(/(\d)(?=(\d{3})+(,))/g, '$1.') + '€';
+                                        return 'Ersparnis: ' + parseFloat( context.raw).toLocaleString('de-DE').replace('.', ',').replace(/(\d)(?=(\d{3})+(,))/g, '$1.') + '€';
                                     }
                                 }
                             }
